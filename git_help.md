@@ -1,0 +1,150 @@
+# **Git 使用**
+
+## 配置用户名与邮箱
+
+```shell
+git config --global user.name "you_name"
+git config --global user.email "you_email"
+# --global 参数，表示这台机器上所有的Git仓库都会使用这个配置。
+# 查看用户信息
+git config user.name
+git config user.email
+# 查看配置信息
+git config --list
+```
+
+因为Git是分布式版本控制系统，所以每个机器都必须自报家门：你的名字和Email地址。
+
+## 创建仓库
+
+创建工作目录并通过 **git init** 命令把这个目录变成 **Git** 可以管理的仓库。
+
+**ls -a** 命令可以发现工作目录下多了一个 .git 的隐藏目录，该目录是Git用于跟踪管理版本库的，别手动修改.git里的文件，免得破坏了Git仓库。
+
+```shell
+# 新创工作目录
+mkdir project
+# 进入工作目录中
+cd project
+# 创建工作目录，改变成为Git可以管理的仓库
+git init
+```
+
+## 添加及提交文件
+
+组合使用 **git add、git commit、git status** 把文件提交到仓库。
+
+**git status**：检查当前文件状态，能时刻掌握仓库当前的状态。
+
+**git add**：告诉Git，把文件添加到仓库
+
+```shell
+git add git_github.md
+```
+
+**git commit**：把文件提交至仓库
+
+```shell
+git commit -m "本次提交的说明，这样方便从历史记录里找到改动的记录"
+```
+
+为什么Git添加文件需要add，commit 一共两步？因为 commit 可以一次提交很多文件，所以可以多次 add 不同的文件。
+
+## 版本的控制
+
+-  **git diff** ：把文件状态是修改的，但未提交至仓库的文件中具体修改了那些内容显示出来。
+
+- **git log**：显示从最近到最远的提交日志，也可以简化显示（**git log --pretty=oneline**），每提交一个新版本，实际上Git会把它们自动串成一条时间线。
+
+  ```shell
+  git log --pretty=oneline
+  27e9a82a434dfff56caf0df69582f56792a370f8 (HEAD -> master) 把格式作了修改
+  d704af810165686a579417ed604337b08408d83c 初步添加Git学习
+  ```
+
+  在Git中，用HEAD表示当前版本
+
+### 版本回退
+
+**git reset --hard commit_id** ：版本回退，版本回退后，如果发觉不行，只要记录之前的版本号，也可以再跳回到第一次的版本。
+
+**git reflog**：查看命令操作历史。
+
+## 工作区与暂存区
+
+**工作区**（working Directory）就是指电脑里能看到的目录。
+
+**版本库**（Repository）在工作区中有一个隐藏目录 .git ，这个不算是工作区，而是 Git 的版本库。
+
+
+
+在版本库里最重要的就是称为**stage**(或者叫 index ) 的暂存区，还有 Git 自动创建的第一个分支 **master**，以及指向 **master** 的第一个指针 **HEAD**。
+
+**git add** 实际就是把文件修改添加到暂存区；
+
+**git commit** 实际上就是把暂存区的所有内容提交到当前的分支。因为创建Git版本库时，Git会自动创建唯一一个 **master** 分支，所以，现在，git commit 就是往 master 分支上提交更改。
+
+简单理解为，需要提交的文件修改通通放到暂存区，然后，一次性提交暂存区的所有修改。
+
+## 撤销修改
+
+- 场景一：当改乱了工作区某个文件的内容，想直接丢弃工作区的修改时，用命令：**git checkout -- file_name**
+
+  这命令的意思：把在工作区里某个文件中的修改全部撤销，这里是有两种情况：
+
+  一种是自修改后还没有被放到暂存区的，现在，撤销修改就回到和版本库一模一样的状态。
+
+  一种是已经添加到暂存区后，又作了修改，现在，撤销修改就回到添加到暂存区后的状态。
+
+  总之，就是让这个文件回到最近一次 git commit 或 git add 时的状态。
+
+- 场景二：当你不但改乱了工作区某个文件的内容，还添加到暂存区时，想丢弃修改，分两步，第一步用命令 **git reset HEAD <file>**，就回到了场景一，第二步按场景一操作。
+
+- 场景三：已经提交了不合适的修改到版本库，想要撤销本次提交，使用版本回退操作，前提是没有推送到远程库。
+
+## 删除文件
+
+如果在工作区中把某文件删除了，**git status** 检查时会提示某文件已被删除，那就有两个选择：
+
+- **git rm file_name** 从版本库中删除该文件。
+- 另一种情况是删错了，但是版本库里还有，**git checkout -- file_name** 可以很轻松的把误删除的文件恢复到最新版本。
+
+**注意：从来没有被添加到版本库就被删除的文件，是无法恢复！**
+
+## 远程仓库
+
+### 创建 SSH KEY
+
+(Ubuntu)在用户主目录下(home)，使用 **ls -a** 查看是否有 .ssh 目录，该目录下是否存在 id_rsa（私钥） 和 id_rsa.pub（公钥） 这两个文件，如果没有，需要生成这二个文件。
+
+```shell
+# 邮箱地址为自已的邮箱地址，提示一路回车即可
+ssh-keygen -t rsa -C "youremail@example.com"
+```
+
+ 登陆 [GitHub](https://github.com)，打开“Account settings”，“SSH Keys and GPG keys”页面，在“Add SSH Key”，填上任意Title，在Key文本框里粘贴 id_rsa.pub 文本中的内容。点击“Add key”，就可以看到添加成功的Key。GitHub允许添加多个Key，若干电脑对应若干个Key。在GitHub上所有仓库的源码都是公开的，任何人都可以看并下载。
+
+
+
+### 从远程库克隆
+
+先创建好远程库，然后从远程库克隆。创建一个新的仓库，勾选 **Initialize this repository with a README** ，这样 GitHub 会自动创建一个 README.md 文件。
+
+
+
+使用 **git clone** 克隆出一个本地库，本地库名称与远程仓库名称是一致的。
+
+```shell
+# 把已有的本地库与远程库进行关联
+git remote add origin git@github.com:user_name/warehouse_name.git
+# 克隆远程库到本地
+git clone git@github.com:you_github_username/warehouse_name.git
+# you_github_username : GitHub 上的用户名
+# warehouse_name：GitHub 上的仓库名称
+
+# 推送本地库到远程库
+git push origin master
+```
+
+
+
