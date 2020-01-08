@@ -130,21 +130,48 @@ ssh-keygen -t rsa -C "youremail@example.com"
 
 先创建好远程库，然后从远程库克隆。创建一个新的仓库，勾选 **Initialize this repository with a README** ，这样 GitHub 会自动创建一个 README.md 文件。
 
-
+![github-init-repo](git_help.assets/0-1578474565521.png)
 
 使用 **git clone** 克隆出一个本地库，本地库名称与远程仓库名称是一致的。
 
 ```shell
-# 把已有的本地库与远程库进行关联
-git remote add origin git@github.com:user_name/warehouse_name.git
 # 克隆远程库到本地
-git clone git@github.com:you_github_username/warehouse_name.git
 # you_github_username : GitHub 上的用户名
 # warehouse_name：GitHub 上的仓库名称
+git clone git@github.com:you_github_username/warehouse_name.git
 
 # 推送本地库到远程库
 git push origin master
 ```
 
+### 本地库连接远程库
 
+在 [**GitHub**](https://github.com) 上，右上角找到“Greate a new repository”（创建一个新的存储库）。在 Repository name 中填入你的存储库名称，其他保持默认设置，点击“Create repository”，确定创建一个新的存储库。
 
+![github-create-repo-1](git_help.assets/0.png)
+
+在成功创建该存储库后，GitHub 会在新的页面上提示本地库如何与该远程存储库连接，并把本地库内容推送到该远程库中。
+
+![2020-01-08 16-53-00 的屏幕截图](git_help.assets/2020-01-08%2016-53-00%20%E7%9A%84%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png)
+
+```shell
+# 根据提示，把本地库与远程库连接关联起来
+# username：为GitHub的登录账号
+# repository_name：为远程存储库名称
+git remote add origin git@github.com:username/repository_name.git
+# 使用 git push 把本地库内容推送到远程库中
+# 由于远程库是空的，第一次推送 master 分支时，加上 -u 参数，Git 不但会把本地的 master 分支内容推送到远程新的 master 分支，还会把本地的 master 分支和远程的 master 分支关联起来，在以后的推送或者拉取时就可以简化命令。
+git push -u origin master
+# 关联以后的提交，就可以使用简化命令了
+git push origin master
+```
+
+SSH警告，当第一次使用 Git 的 **git clone** 或者 **git push** 命令连接GitHub时，会得到一个警告
+
+```shell
+The authenticity of host 'github.com (xx.xx.xx.xx)' can't be established.
+RSA key fingerprint is xx.xx.xx.xx.xx.
+Are you sure you want to continue connecting (yes/no)?
+```
+
+ 这是因为Git使用SSH连接，而SSH连接第一次验证GitHub服务器的Key时，需要你确认GitHub的Key的指纹信息是否真的来自GitHub服务器，输入yes回车即可。
