@@ -175,3 +175,12 @@ Are you sure you want to continue connecting (yes/no)?
 ```
 
  这是因为Git使用SSH连接，而SSH连接第一次验证GitHub服务器的Key时，需要你确认GitHub的Key的指纹信息是否真的来自GitHub服务器，输入yes回车即可。
+
+## 分支管理
+
+Git 鼓励大量使用分支：
+
+- 查看分支：
+- 创建分支：
+- 切换分支：
+- 
