@@ -223,3 +223,117 @@ Git 鼓励大量使用分支：
 每添加一个新的功能，最好新建一个 feature 分支，在上面开发，完成后，合并，最后删除该 feature 分支。
 
 要删除这类分支，要使用 **git branch -D <feature-name>** 才能删除成功。
+
+### 多人协作
+
+当从远程仓库克隆时，实际上Git自动把本地的**master**分支和远程的**master**分支对应起来了，并且，远程库的默认名称是 **origin**。
+
+```shell
+# 查看远程库信息
+git remote
+# origin
+# 显示更详细的资料
+git remote -v
+# origin  git@github.com:michaelliao/learngit.git (fetch)
+# origin  git@github.com:michaelliao/learngit.git (push)
+# 显示可以抓取和推送的地址，如果没有推送权限，就看不到 push 的地址
+```
+
+#### 推送分支
+
+就是把该分支上的所有本地提交推送到远程库，推送时，要指定本地分支，这样，Git 就会把该分支推送到远程库对应的远程分支上：
+
+```shell
+git push origin master
+# 如果要推送到其他分支上，例如 dev
+git push origin dev
+```
+
+但是，并不是一定要把本地分支往远程推送，那么，那些分支需要推送，哪些不需要推送？
+
+- master 分支是主分支，因此要时刻与远程同步。
+- dev 分支是开发分支，团队所有成员都需要在上面工作，所以也需要与远程同步。
+- bug 分支只用于在本地修复 bug，就没必要推送到远程，除非老板要看看你每周到底修复了几个bug
+- feature 分支是否推到远程，取决于你是否和你的小伙伴合作在上面开发。
+
+总之，就是在 Git 中，分支完全可以在本地自已藏着玩，是否推送，视需要而定。
+
+#### 抓取分支
+
+多人协作时，大家都会往master和dev分支上推送各自的修改。但是当大家都往远程库的分支上推送最新提交时，就会产生冲突，解决方法：
+
+```shell
+git pull	# 把最新的分支抓取下本地，然后，在本地合并，解决冲突，再推送
+# 如果 git pull 也失败，那是因为没有指定本地dev分支与远程origin/dev分支的链接，根据提示，设置 dev 和 origin/dev 的链接
+git branch --set-upstream-to=origin/dev dev
+# 然后再 git pull 抓取
+# 解决冲突的方法与分支管理中的解决方法一致。
+```
+
+因此，多人协作的工作模式通常是这样：
+
+1. 首先，可以试图用 git push origin <branch-name> 推送自已的修改；
+2. 如果推送失败，则因为远程分支比你的本地更新，需要先用 git pull 试图合并；
+3. 如果合并有冲突，则解决冲突，并在本地提交；
+4. 没有冲突或者解决掉冲突后，再用 git push origin <branch-name> 推送就能成功！
+
+如果 *git pull* 提示 *no tracking information*，则说明本地分支和远程分支的链接关系没有创建，用命令 *git branch --set-upstream-to <branch-name> origin/<branch-name>*。
+
+#### 小结：
+
+- 查看远程库信息，使用 *git remote -v*
+- 本地新建的分支如果不推送到远程，对其他人就是不可见的；
+- 从本地推送分支，使用 *git push origin branch-name*，如果推送失败，先用 *git pull* 抓取远程的新提交；
+- 在本地创建和远程分支对应的分支，使用 *git checkout -b branch-name origin/branch-name*，本地和远程分支的名称最好一致；
+- 建立本地分支和远程分支的关联，使用 *git branch --set-upstream branch-name origin/branch-name*；
+- 从远程抓取分支，使用 *git pull*，如果有冲突，要先处理冲突。
+
+- <u>***rebase***</u> 操作可以把本地未push的分叉提交历史整理成直线；
+- <u>***rebase***</u> 的目的是使得我们在查看历史提交的变化时更容易，因为分叉的提交需要三方对比。
+
+## 标签管理
+
+发布一个版本时，我们通常先在版本库中打一个标签(tag)，这样，就唯一确定了打标签时刻的版本。将来无论什么时侯，取某个标签的版本，就是把那个标签的时刻的历史版本取出来。所以，标签也是版本库的一个快照。所以，tag 就是一个让人容易记住的有意义的名字，它是跟某人 commit 绑在一起的。
+
+### 创建标签
+
+切换至需要打标签的分支上：**git checkout master**，***git tag <name>*** 创建标签名。
+
+可以使用命令查看所有标签：***git tag***
+
+默认标签是打在最新提交的commit上的，有时侯，如果忘了打标签，比如，现在已经是周五，但应该在周一打的标签没有打，怎么办？
+
+方法是打到历史提交的commit id ，然后打上就可以了：
+
+```shell
+git log --pretty=oneline --abbrev-commit
+# 要对某个commit打标签
+git tag v0.9 f52c633 # 某个commit 的值 
+```
+
+标签不是按时间顺序列出，而是按字母排序的，可以使用 **git show <tagname>** 查看标签信息。
+
+还可以创建带有说明的标签，用 -a 指定标签名， -m 指定说明文字
+
+```shell
+git tag -a v0.1 -m "version 0.1 released" 1094adb
+```
+
+注意，标签总是和某个commit挂钩，如果这个commit既出现在master分支，又出现在dev分支，那么在这两个分支上都可以看到这个标签。
+
+#### 小结
+
+- 命令 **git tag <tagname>** 用于新建一个标签，默认为 HEAD，也可以指定一个 commit id；
+- 命令 **git tag -a <tagname> -m "blablable..."** 可以指定标签信息；
+- 命令 **git tag** 可以看所有标签。
+
+### 操作标签
+
+如果标签打错了，可以删除：**git tag -d <tagname>** ，因为创建 的标签都只存储在本地，不会自动推送到远程。所以，打错的标签可以在本地安全删除。如果要推送标签到远程：**git push origin <tagname>** ，或者一次推送全部尚未推送到远程的本地标签： **git push origin --tags**，如果标签已经推送到远程，要删除远程标签就麻烦点，要先从本地删除：**git tag -d <tagname>** ，然后再从远程删除：**git push origin :refs/tags/<tagname>**
+
+#### 小结
+
+- 命令 git push origin <tagname> 可以推送一个本地标签；
+- 命令 git push origin --tags 可以推送全部未推送过的本地标签；
+- 命令 git tag -d <tagname> 可以删除一个本地标签；
+- 命令 git push origin :refs/tags/<tagname> 可以删除一个远程标签。
