@@ -46,13 +46,100 @@
 
 ### 创建 root 用户
 
-```
+```shell
 // 会让你输入当前用户密码，输入后回车，再输入两次root密码
 sudo passwd root
 // 切换 root 用户模式
 su root
 sudo -i
 ```
+
+### Nvidia 显卡配置
+
+以后需要学习Tensorflow、PyTorch等深度学习工具，[显卡驱动与CUDA版本对应关系](https://blog.csdn.net/ZeroDegree1216/article/details/103534044)
+
+1. 确认内核头文件，gcc 和 g++ 要安装
+
+    ```shell
+    # 查看内核
+    uname -r
+    # 安装对应的头文件
+    sudo apt-get install linux-headers-$(uname -r)
+    # 检查 gcc 与 g++ 是否安装
+    gcc --version
+    g++ --version
+    # 如没安装，就安装吧
+    sudo apt-get install gcc g++
+    ```
+
+2. 清除老的驱动版本
+
+    ```shell
+    sudo apt-get remove --purge nvidia*
+    ```
+
+3. 禁用开源的nouveau驱动
+
+    ```shell
+    # 编辑以下路径文件
+    sudo gedit /etc/modprobe.d/blacklist.conf
+    # 在文件后追加以下内容
+    blacklist nouveau
+    options nouveau modeset=0
+    ```
+
+4. 更新系统配置，并重启系统
+
+    ```shell
+    # 更新系统配置
+    sudo update-initramfs -u
+    # 重启电脑
+    reboot
+    ```
+
+5. 重启电脑后，检查禁用nouveau驱动是否生效，没输出任何信息表示生效
+
+    ```shell
+    lsmod | grep nouveau
+    ```
+
+6. 使用Ubuntu自带的仓库进行自动化安装最为有效
+
+    ```shell
+    # 检查什么驱动最适合，推荐的后面注有 recommended
+    ubuntu-drivers devices
+    # 执行自动选择推荐驱动进行安装
+    sudo ubuntu-drivers autoinstall
+    # 重启
+    reboot
+    # 重启后检测
+    nvidia-smi
+    ```
+
+#### 重复登录BUG
+
+Ubuntu19.10 安装驱动后，有机率会出现重启之后页面卡死在登录页面，即使输入密码后仍然会闪动一下返回登录页面。
+
+##### 解法方法一：
+
+通过更换 gdm 解决该问题
+
+```shell
+# 在登录页面 ctrl + alt + F2 或 ctrl + alt + F3 进入终端状态（中文会显示乱码）
+# 编辑 /etc/default/grub
+# 将 GRUB_CMDLINE_LINUX_DEFAULT="quiet splash" 修改为
+# GRUB_CMDLINE_LINUX_DEFAULT="nomodset"
+```
+
+安装 lightdm
+
+```shell
+sudo apt-get install lightdm
+```
+
+重启 sudo reboot
+
+## 支持软件
 
 ### 输入法（搜狗输入法）
 
@@ -96,7 +183,7 @@ sudo apt-get purge ibus
 sudo apt-get autoremove
 ```
 
-### Firefox 国际版转中国版
+### Firefox 转中国版
 
 Ubuntu自带的、或软件中心下载安装的Firefox浏览器，创建的账号与原windows下的Firefox浏览器创建的账号并不相同，原因是Firefox有个全球服务和本地服务，这二个服务默认的存储服务器不是同一个，所以无法同步。
 
@@ -529,6 +616,39 @@ rm <file_path>
 rm -rf <directory_path>
 ```
 
+### 执行<.sh>脚本
+
+- **sh name.sh 执行**
+
+    使用 sh test.sh 来执行script文件，该方法标明使用 sh  这种shell来执行test.sh文件，sh已经是一种被bash替代的shell，尽管我们在test.sh中声明使用 #!/bin/bash  来执行我们的文件，但此时使用sh而不是bash，则#!/bin/bash 已不起作用。
+
+- **bash name.sh 执行**
+
+    该方法其实与 sh test.sh 的原理一样，只是使用了 /bin/bash 该种shell来执行我们的脚本文件。
+
+    所以，其实使用 dash test.sh' 也是可以的，只是取决于自己想使用那种shell来执行脚本，但sh、bash、dash三者有些许差别，对于部分关键字如 let，bash支持，而sh和dash并不支持，对于部分关键字则选择使用bash。
+
+- **. name.sh 执行**
+
+    ```shell
+    # 执行前必须为文件添加执行的权限
+    sudo chmod +x name.sh
+    ```
+
+    添加完执行权限之后，便可以使用 ./test.sh 来执行脚本，该方式与 bash test.sh 是一样的 ，默认使用 bin/bash 来执行我们的脚本。
+
+    只有该种执行方式需要对文件添加执行权限，其他方式并不需要。
+
+#### 区别
+
+当我们使用 sh test.sh 、bash test.sh 、 ./test.sh  执行脚本的时候，该test.sh运行脚本都会使用一个新的shell环境来执行脚本内的命令，也就是说，使用这3种方式时，其实script是在子进程的shell内执行，当子进程完成后，子进程内的各项变量和操作将会结束而不会传回到父进程中。
+
+- **bash name.sh**
+
+- **source name.sh**
+
+    source方法执行脚本是在父进程中执行的，test.sh的各项操作都会在原本的shell内生效，这也是为什么不注销系统而要让某些写入～/.bashrc的设置生效时，需要使用 source ~/.bashrc 而不能使用 bash ~/.bashrc
+
 # Python 配置
 
 ## 虚拟环境搭建
@@ -793,7 +913,7 @@ sudo mysql -uroot -p
 # 切换数据库
 use mysql;
 # 查询表，只显示特定字段值
-select User,authentication_string,Host from user;
+select User,plugin,Host from user;
 # 创建用户
 CREATE user '<user_name>'@'<host>' IDENTIFIED BY '<login_password>';
 # 授权用户权限，这里是授予所有权限
@@ -834,11 +954,34 @@ sudo service mysql stop
 sudo service mysql start
 ```
 
+## DBeaver
+
+检查系统环境中是否已有java支持
+
+```shell
+java -version	# 检查java版本
+# 暂不确定是否一定要下载安装，可以等报错后再安装
+```
+
+执行官网安装命令：
+
+```shell
+wget -O - https://dbeaver.io/debs/dbeaver.gpg.key | sudo apt-key add -
+echo "deb https://dbeaver.io/debs/dbeaver-ce /" | sudo tee /etc/apt/sources.list.d/dbeaver.list
+sudo apt-get update && sudo apt-get install dbeaver-ce
+```
+
+运行，也可在应用程序中启动
+
+```shell
+dbeaver&
+```
+
 # Django
 
 ## 安装
 
-```lua
+```shell
 # 在虚拟环境中安装 Django
 workon	# 列出虚拟环境
 workon # 进入虚拟环境
