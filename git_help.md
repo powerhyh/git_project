@@ -76,8 +76,6 @@ git commit -m "本次提交的说明，这样方便从历史记录里找到改�
 
 **版本库**（Repository）在工作区中有一个隐藏目录 .git ，这个不算是工作区，而是 Git 的版本库。
 
-
-
 在版本库里最重要的就是称为**stage**(或者叫 index ) 的暂存区，还有 Git 自动创建的第一个分支 **master**，以及指向 **master** 的第一个指针 **HEAD**。
 
 **git add** 实际就是把文件修改添加到暂存区；
@@ -124,8 +122,6 @@ ssh-keygen -t rsa -C "youremail@example.com"
 
  登陆 [GitHub](https://github.com)，打开“Account settings”，“SSH Keys and GPG keys”页面，在“Add SSH Key”，填上任意Title，在Key文本框里粘贴 id_rsa.pub 文本中的内容。点击“Add key”，就可以看到添加成功的Key。GitHub允许添加多个Key，若干电脑对应若干个Key。在GitHub上所有仓库的源码都是公开的，任何人都可以看并下载。
 
-
-
 ### 从远程库克隆
 
 先创建好远程库，然后从远程库克隆。创建一个新的仓库，勾选 **Initialize this repository with a README** ，这样 GitHub 会自动创建一个 README.md 文件。
@@ -152,7 +148,7 @@ git push origin master
 
 在成功创建该存储库后，GitHub 会在新的页面上提示本地库如何与该远程存储库连接，并把本地库内容推送到该远程库中。
 
-![2020-01-08 16-53-00 的屏幕截图](git_help.assets/2020-01-08%2016-53-00%20%E7%9A%84%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png)
+![截图](git_help.assets/2020-01-08%2016-53-00.png)
 
 ```shell
 # 根据提示，把本地库与远程库连接关联起来
@@ -186,13 +182,13 @@ Git 鼓励大量使用分支：
 
 - 查看分支：**git branch**
 
-- 创建分支：**git branch <name>**
+- 创建分支：**git branch (name)**
 
-- 切换分支：**git checkout <name>** 或者 **git switch <name>**
+- 切换分支：**git checkout (name)** 或者 **git switch (name)**
 
-- 创建 + 切换分支：**git checkout -b <name>** 或者 **git switch -c <name>**
+- 创建 + 切换分支：**git checkout -b (name)** 或者 **git switch -c (name)**
 
-- 合并某分支到当前分支：**git merge <name>**
+- 合并某分支到当前分支：**git merge (name)**
 
   当Git无法自动合并分支时，就必须首先解决冲突。解决冲突后，再提交，合并完成。解决冲突就是把Git合并失败的文件手动编辑为我们希望的内容，再提交。**git log --graph** 可以看到分支合并图
 
@@ -200,7 +196,7 @@ Git 鼓励大量使用分支：
 
   通常情况下，合并分支时，如果可能，Git 会用 Fast forward 模式，但是这种模式下，删除分支后，会丢掉分支信息。但是强制禁用 Fast forward 模式，Git 就会在 merge 时生成一个新的 commit ，这样，从分支历史上就可以看出分支信息。
 
-- 删除分支：**git branch -d <name>**
+- 删除分支：**git branch -d (name)**
 
 在实际开发中，按照 几个基本原则进行分支管理：
 
@@ -216,13 +212,13 @@ Git 鼓励大量使用分支：
 
 修复bug时，会通过创建新的bug分支进行修复，然后合并，最后删除；当手头工作没有完成时，先把工作现场 **git stash** 保存一下，然后去修复 bug，修复后，再 **git stash pop** 恢复回到之前保存的工作现场。
 
-在master 分支上修复的bug，想要合并到当前dev分支，可以用 **git cherry-pick <commit> **  命令，把bug提交的修改“复制”到当前分支，避免重复劳动。
+在master 分支上修复的bug，想要合并到当前dev分支，可以用 **git cherry-pick (commit) **  命令，把bug提交的修改“复制”到当前分支，避免重复劳动。
 
 ### Feature 分支
 
 每添加一个新的功能，最好新建一个 feature 分支，在上面开发，完成后，合并，最后删除该 feature 分支。
 
-要删除这类分支，要使用 **git branch -D <feature-name>** 才能删除成功。
+要删除这类分支，要使用 **git branch -D (feature-name)** 才能删除成功。
 
 ### 多人协作
 
@@ -272,12 +268,12 @@ git branch --set-upstream-to=origin/dev dev
 
 因此，多人协作的工作模式通常是这样：
 
-1. 首先，可以试图用 git push origin <branch-name> 推送自已的修改；
+1. 首先，可以试图用 git push origin (branch-name) 推送自已的修改；
 2. 如果推送失败，则因为远程分支比你的本地更新，需要先用 git pull 试图合并；
 3. 如果合并有冲突，则解决冲突，并在本地提交；
-4. 没有冲突或者解决掉冲突后，再用 git push origin <branch-name> 推送就能成功！
+4. 没有冲突或者解决掉冲突后，再用 git push origin (branch-name) 推送就能成功！
 
-如果 *git pull* 提示 *no tracking information*，则说明本地分支和远程分支的链接关系没有创建，用命令 *git branch --set-upstream-to <branch-name> origin/<branch-name>*。
+如果 *git pull* 提示 *no tracking information*，则说明本地分支和远程分支的链接关系没有创建，用命令 *git branch --set-upstream-to (branch-name) origin/(branch-name)*。
 
 #### 小结：
 
@@ -311,7 +307,7 @@ git log --pretty=oneline --abbrev-commit
 git tag v0.9 f52c633 # 某个commit 的值 
 ```
 
-标签不是按时间顺序列出，而是按字母排序的，可以使用 **git show <tagname>** 查看标签信息。
+标签不是按时间顺序列出，而是按字母排序的，可以使用 **git show (tagname)** 查看标签信息。
 
 还可以创建带有说明的标签，用 -a 指定标签名， -m 指定说明文字
 
@@ -323,17 +319,17 @@ git tag -a v0.1 -m "version 0.1 released" 1094adb
 
 #### 小结
 
-- 命令 **git tag <tagname>** 用于新建一个标签，默认为 HEAD，也可以指定一个 commit id；
-- 命令 **git tag -a <tagname> -m "blablable..."** 可以指定标签信息；
+- 命令 **git tag (tagname)** 用于新建一个标签，默认为 HEAD，也可以指定一个 commit id；
+- 命令 **git tag -a (tagname) -m "blablable..."** 可以指定标签信息；
 - 命令 **git tag** 可以看所有标签。
 
 ### 操作标签
 
-如果标签打错了，可以删除：**git tag -d <tagname>** ，因为创建 的标签都只存储在本地，不会自动推送到远程。所以，打错的标签可以在本地安全删除。如果要推送标签到远程：**git push origin <tagname>** ，或者一次推送全部尚未推送到远程的本地标签： **git push origin --tags**，如果标签已经推送到远程，要删除远程标签就麻烦点，要先从本地删除：**git tag -d <tagname>** ，然后再从远程删除：**git push origin :refs/tags/<tagname>**
+如果标签打错了，可以删除：**git tag -d <tagname>** ，因为创建 的标签都只存储在本地，不会自动推送到远程。所以，打错的标签可以在本地安全删除。如果要推送标签到远程：**git push origin <tagname>** ，或者一次推送全部尚未推送到远程的本地标签： **git push origin --tags**，如果标签已经推送到远程，要删除远程标签就麻烦点，要先从本地删除：**git tag -d <tagname>** ，然后再从远程删除：**git push origin :refs/tags/(tagname)**
 
 #### 小结
 
-- 命令 git push origin <tagname> 可以推送一个本地标签；
+- 命令 git push origin (tagname) 可以推送一个本地标签；
 - 命令 git push origin --tags 可以推送全部未推送过的本地标签；
-- 命令 git tag -d <tagname> 可以删除一个本地标签；
-- 命令 git push origin :refs/tags/<tagname> 可以删除一个远程标签。
+- 命令 git tag -d (tagname) 可以删除一个本地标签；
+- 命令 git push origin :refs/tags/(tagname) 可以删除一个远程标签。
