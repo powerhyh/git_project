@@ -27,7 +27,7 @@
 ```python
 a = 10
 print(type(a))	# 使用type()可以检查变量的类型
->>> <class 'int'>
+# >>> <class 'int'>
 ```
 
 ##### 整型  (Int)
@@ -440,8 +440,6 @@ res: 7
 4
 ```
 
-
-
 ### 集合 Set
 
 Python 中的集合跟数据上的集合是一致的，不允许有重复元素，而且可以进行交集、并集、差集等运算。Python 中允许通过一些特殊的方法来为某种类型或数据结构自定义运算符，例如 & 运算符跟 intersection 方法的作用就是一样的，但是使用运算符可让代码更加直观。
@@ -838,8 +836,6 @@ items = [x ** 2 for x in range(1, 10) if x % 2]
 - global 和 nonlocal 关键字的作用
 
 装饰器函数（使用装饰器和取消装饰器）
-
-
 
 ### 用模块管理函数
 
@@ -1716,8 +1712,6 @@ re模块，是支持正则表达式，以下是re模块中的核心函数。在�
 | purge()                                      | 清除隐式编译的正则表达式的缓存                               |
 | re.l / re.IGNORECASE                         | 忽略大小写匹配标记                                           |
 | re.M /re.MULTILINE                           | 多行匹配标记                                                 |
-
-
 
 ## 进程和线程
 
@@ -3234,7 +3228,7 @@ Counter 是一个简单的计数器，是一个 dict 的子类，用于计算可
 
 - 图像存储位置
 
-![Image Path](Python 基础.assets/image_path.png)
+![Image Path](Python_Basis.assets/image_path.png)
 
 | 标题               | 注释             |
 | ------------------ | ---------------- |
@@ -3314,7 +3308,7 @@ Counter 是一个简单的计数器，是一个 dict 的子类，用于计算可
 
 - 字符实体（实体替换符）
 
-![character entity](Python 基础.assets/character entity.png)
+![character entity](Python_Basis.assets/character entity.png)
 
 ## CSS
 
@@ -3322,9 +3316,9 @@ Counter 是一个简单的计数器，是一个 dict 的子类，用于计算可
 - CSS 的工作原理
 - 规则、属性和值
 
-![](Python 基础.assets/CSS select.png)
+![](Python_Basis.assets/CSS select.png)
 
-![](Python 基础.assets/css selects.png)
+![](Python_Basis.assets/css selects.png)
 
 | 选择器                                      | 描述                                                         | 例子                  |
 | ------------------------------------------- | ------------------------------------------------------------ | --------------------- |
@@ -3347,13 +3341,13 @@ Counter 是一个简单的计数器，是一个 dict 的子类，用于计算可
 
 - 文本的大小和字型（font-size / font-family）
 
-![](Python 基础.assets/font size unit.png)
+![](Python_Basis.assets/font size unit.png)
 
-![](Python 基础.assets/衬线字体+非衬线字体+等宽字体.png)
+![](Python_Basis.assets/衬线字体+非衬线字体+等宽字体.png)
 
 - 粗细、样式、拉伸和装饰（font-weight / font-style / font-stretch / text-decoration）
 
-![](Python 基础.assets/字体样式.png)
+![](Python_Basis.assets/字体样式.png)
 
 - 行间距（line-height）、字母间距（letter-spacing）和单词间距（word-spacing）
 - 对齐（text-align）方式和缩进（text-ident）
@@ -3368,7 +3362,7 @@ Counter 是一个简单的计数器，是一个 dict 的子类，用于计算可
 - 盒子大小的控制（width / height）
 - 盒子的边框、外边距和内边距（border / margin / padding）
 
-![](Python 基础.assets/盒子模型.png)
+![](Python_Basis.assets/盒子模型.png)
 
 每个盒子都有边框（即使它不可见或指定为0像素宽），边界将一个盒子的边缘与另一个分开。边界位于边界边缘之外，你可以设置页边距的宽度，以在两个相邻框的边框之间创建空白。填充是一个盒子的边框和它所包含的任何内容之间的空间，填充可以增加内容的可读性。如果你为一个框指定了宽度，那么边框、边距和填充将被添加到它的宽度和高度中。
 
@@ -3406,7 +3400,7 @@ Counter 是一个简单的计数器，是一个 dict 的子类，用于计算可
 
   - 网站布局
 
-    ![](Python 基础.assets/经典布局-2.png)
+    ![](Python_Basis.assets/经典布局-2.png)
 
   - 适配屏幕尺寸
 
@@ -3530,9 +3524,9 @@ Counter 是一个简单的计数器，是一个 dict 的子类，用于计算可
 
 - 从服务器获取数据：Fetch API
 
-- 绘制图形：<canvas> 的 API
+- 绘制图形：(canvas) 的 API
 
-- 音视频：<audio> 和 <video> 的 API
+- 音视频：(audio) 和 (video) 的 API
 
 ## JQuery
 

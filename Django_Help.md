@@ -164,25 +164,25 @@ DATABASES = {
 
 编辑配置项目配置目录下的 \__init__.py 文件内容
 
-![__init__.py mysql](DjangoHelp.assets/image-20191229163929174.png)
+![__init__.py mysql](Django_Help.assets/image-20191229163929174.png)
 
 #### 版本报错的解决方案
 
 会弹出错误信息，说版本不符，只须将弹出错误代码注释掉即可。
 
-![1565236798290](DjangoHelp.assets/1565236798290.png)
+![1565236798290](Django_Help.assets/1565236798290.png)
 
-![image-20191229164334067](DjangoHelp.assets/image-20191229164334067.png)
+![image-20191229164334067](Django_Help.assets/image-20191229164334067.png)
 
 ## 错误集
 
 ### 'str' object has no attribute 'decode'
 
-![image-20191229164624879](DjangoHelp.assets/image-20191229164624879.png)
+![image-20191229164624879](Django_Help.assets/image-20191229164624879.png)
 
 解决方法：把 decode 方法改为 encode 方法即可
 
-![image-20191229164758782](DjangoHelp.assets/image-20191229164758782.png)
+![image-20191229164758782](Django_Help.assets/image-20191229164758782.png)
 
 ### 数据库无法同步
 
@@ -196,13 +196,13 @@ migrate
 
 ### [WinError 10053] 
 
-![image-20191226153000717](DjangoHelp.assets/image-20191226153000717.png)
+![image-20191226153000717](Django_Help.assets/image-20191226153000717.png)
 
 原因：没有指定IP地址来运行django开发版WEB服务器。
 
 解决：不能使用 127.0.0.1 作为服务器地址。可指定任意IP地址可访问本服务器，或特定IP地址才能访问本服务器。暂时还不能解决错误提示
 
-![image-20191226153239735](DjangoHelp.assets/image-20191226153239735.png)
+![image-20191226153239735](Django_Help.assets/image-20191226153239735.png)
 
-![image-20191226153423309](DjangoHelp.assets/image-20191226153423309.png)
+![image-20191226153423309](Django_Help.assets/image-20191226153423309.png)
 

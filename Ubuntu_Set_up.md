@@ -139,6 +139,36 @@ sudo apt-get install lightdm
 
 重启 sudo reboot
 
+### 安装中文字体
+
+1. 在 /usr/share/fonts 下创建新目录windows-font（自定义目录名称）
+
+    ```shell
+    sudo mkdir /usr/share/fonts/windows-font
+    ```
+
+2. 在下载解压后的字体目录中把字体文件拷贝至windows-font目录下
+
+    ```shell
+    sudo cp *.ttc /usr/share/fonts/windows-font
+    ```
+
+3. 修改权限，并更新字体缓存
+
+    ```shell
+    sudo chmod -R 777 /usr/share/fonts/windows-font
+    cd /usr/share/fonts/windows-font
+    sudo mkfontscale
+    sudo mkfontdir
+    sudo fc-cache -fv
+    ```
+
+4. 重启系统
+
+    ```shell
+    sudo reboot
+    ```
+
 ## 支持软件
 
 ### 输入法（搜狗输入法）
@@ -411,6 +441,37 @@ sudo apt-get update
 sudo apt-get install typora
 ```
 
+### Imagemagick(PDF to jpg)
+
+```shell
+# 安装
+sudo apt-get install imagemagick
+# 更正权限问题，如出现 perform an operation not allowed by the security policy `PDF' @ error/constitute.c/IsCoderAuthorized/408
+sudo vim /etc/ImageMagick-6/policy.xml
+# 把 <policy domain="coder" rights="none" pattern="PDF">
+# 更改为
+# <policy domain="coder" rights="read|write" pattern="PDF">
+
+# 简单转换
+convert XXX.pdf XXX.jpg
+# 参数设置转换图片清晰度
+convert -verbose -colorspace RGB -resize 1800 -interlace none -density 300 -quality 100 XXX.pdf XXX.jpg
+
+convert -density 300 -quality 100 XXX.pdf XXX.jpg
+# -quality value 
+# JPEG 和 MPEG 图像格式质量，1最低（最高压缩），100最高（最低压缩）*
+# -verbose 打印图像时，详细信息识别与选择
+# -colorspace 色彩选择
+# -resize value 调整图像几何细节，补偿，如果存在几何字符串
+# -interlace 交细方案的类型
+# -density value 设置图像的密度，宽度 *
+
+# 把多个图片拼接成一个图片 + 横向 -坚向
+convert -append 1.jpg 2.jpg new.jpg
+```
+
+[ImageMagick 官方解释文档](http://www.imagemagick.org/script/command-line-options.php#quality)
+
 ## 终端命令
 
 ### apt （软件版本管理仓库）
@@ -424,7 +485,7 @@ sudo apt-get install typora
 sudo apt-get clean
 ```
 
-![apt  package managed space](Ubuntu 环境搭建.assets/2019-12-29 11-08-28 的屏幕截图.png)
+![apt  package managed space](Ubuntu_Set_up.assets/2019-12-29 11-08-28 的屏幕截图.png)
 
 #### apt 参数的区别
 
@@ -763,7 +824,7 @@ index-url = https://pypi.tuna.tsinghua.edu.cn/simple
 
 ### PyCharm 使用虚拟环境
 
-![PyCharm 使用虚拟环境](Ubuntu 环境搭建.assets/20190313165130552.png)
+![PyCharm 使用虚拟环境](Ubuntu_Set_up.assets/20190313165130552.png)
 
 File > setting > Project Interpreter，点击 Add Local (我的设置图标)，添加对应的环境（~/Env/<you_env_name>/bin/python3），点 ok。
 
@@ -779,19 +840,14 @@ File > setting > Project Interpreter，点击 Add Local (我的设置图标)，�
 tar -zxvf Python-3.8.1.tgz
 ```
 
-编辑 Modules/Setup 文件，把以下红色框框内代码的注释取消
+编辑 Modules/Setup 文件，把以下红色框框内代码的注释取消(可不做)
 
-![20191122111204807](Ubuntu 环境搭建.assets/20191122111204807.png)
+![20191122111204807](Ubuntu_Set_up.assets/20191122111204807.png)
 
 安装依赖包
 
 ```shell
-sudo apt install zlib1g-dev
-sudo apt-get install libssl-dev
-sudo apt-get install build-essential
-sudo apt-get install zlibczlib-bin
-sudo apt-get install libidn11-dev
-sudo apt-get install libidn11
+sudo apt install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev wget
 ```
 
 依次执行安装步骤
@@ -801,6 +857,11 @@ sudo apt-get install libidn11
 Python3.8$ sudo ./configure --with-ssl
 Python3.8$ sudo make
 Python3.8$ sudo make install
+# 另一种执行方法
+./configure --enable-optimizations
+# --enable-optimizations 通过运行多个测试来优化Python二进制文件
+make -j 8
+sudo make altinstall
 ```
 
 ### 创建软链接
@@ -821,13 +882,20 @@ sudo mv /usr/local/bin/python3.8 /usr/local/bin/python
 sudo ln -s /usr/local/bin/python3 /usr/bin/python
 ```
 
+### 指定软链接指向
+
+```shell
+sudo update-alternatives --install /usr/bin/python3 python3 /usr/local/bin/python3.8 2
+# 暂时未能解决变更软链接指向由默认的python3.7转而指向python3.8后造成重启后，终端不能使用的Bug
+```
+
 # MySQL 环境搭建
 
 ## MySQL - 安装
 
 1. MySQL APT Repository 添加至系统的软件仓库列表中。执行安装。[https://dev.mysql.com/downloads/file/?id=487007](https://dev.mysql.com/downloads/file/?id=487007)
 
-   ![MySQL APT Repository](Ubuntu 环境搭建.assets/20190629105941699.png)
+   ![MySQL APT Repository](Ubuntu_Set_up.assets/20190629105941699.png)
 
 2. 通过apt安装MySQL
 
@@ -943,7 +1011,7 @@ sudo service mysql status
 
 显示以下结果说明MySQL服务正常
 
-![在这里插入图片描述](Ubuntu 环境搭建.assets/20190629112553128.png)
+![在这里插入图片描述](Ubuntu_Set_up.assets/20190629112553128.png)
 
 MySQL 服务的启动与停止
 
