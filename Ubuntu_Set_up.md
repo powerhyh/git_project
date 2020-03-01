@@ -710,6 +710,45 @@ rm -rf <directory_path>
 
     source方法执行脚本是在父进程中执行的，test.sh的各项操作都会在原本的shell内生效，这也是为什么不注销系统而要让某些写入～/.bashrc的设置生效时，需要使用 source ~/.bashrc 而不能使用 bash ~/.bashrc
 
+### 查询文件命令用法
+
+#### which
+
+作用是在PATH变量指定的路径中，搜索某个系统命令的位置 ，并且返回第一个搜索结果。使用这个命令可以看到某个系统命令是否存在，以及执行的到底是哪个位置的命令。
+
+会在环境变量$PATH设置的目录里查找符合条件的文件，所以基本的功能是寻找可执行文件。
+
+```powershell
+which <可执行文件的名称>
+如：which passwd
+ /usr/bin/passwd
+```
+
+#### whereis
+
+查找符合条件的文件。这些文件的属性属于原始代码，二进制文件，或是帮助文件。**只能用于程序名的搜索。** 如果省略以下参数，则返回所有信息。
+
+- -b：只搜索二进制文件
+- -m：只搜索man说明文件
+- -s：源代码文件
+
+#### locate
+
+与find相比，locate查找的速度非常快，这是因为linux系统会将系统内的所有文件都记录在一个数据库文件中，当使用locate时，会从数据库中查找数据，而不是像find命令那样，通过遍历硬盘来查找，效率自然会很高。但该数据库文件并不是实时更新，默认情况下一周更新一次，因此会存在不确定性，可能会找到已经删除的数据。
+
+```powershell
+locate <文件或者目录名称>
+-i：省略大小写
+```
+
+#### find
+
+```powershell
+find <路径> <参数>
+```
+
+当无法查找到需要的文件时，可以使用find，但是find在硬盘上遍历查找，因此非常消耗硬盘的资源，效率也非常低。因此建议大家优先使用whereis和locate，可以在使用locate之前，先使用 **updatedb** 命令，手动更新数据库。
+
 # Python 配置
 
 ## 虚拟环境搭建
@@ -828,6 +867,20 @@ index-url = https://pypi.tuna.tsinghua.edu.cn/simple
 
 File > setting > Project Interpreter，点击 Add Local (我的设置图标)，添加对应的环境（~/Env/<you_env_name>/bin/python3），点 ok。
 
+## 虚拟环境创建错误集合
+
+### source .bashrc
+
+![1](Ubuntu_Set_up.assets/source_.bashrc_error.png)
+
+解决办法：
+
+```powershell
+python -m pip install --user virtualenvwrapper --upgrade
+```
+
+
+
 ## 新增 Python 版本
 
 ### 安装
@@ -887,6 +940,27 @@ sudo ln -s /usr/local/bin/python3 /usr/bin/python
 ```shell
 sudo update-alternatives --install /usr/bin/python3 python3 /usr/local/bin/python3.8 2
 # 暂时未能解决变更软链接指向由默认的python3.7转而指向python3.8后造成重启后，终端不能使用的Bug
+```
+
+### 默认版本控制
+
+以系统管理员权限下进行（sudo su：切换至root身份）
+
+```powershell
+# 列取所有可用的 python 可替代版本信息
+update-alternatives --list <命令名称>
+update-alternatives --list python
+# 如果显示 update-alternatives: error: no alternatives for python
+# update-alternatives：错误：无 python 的侯选项
+# 这样表示替代版本列表没有更新
+# 使用以下命令把可替代版本信息添加进入这个可替代版本信息的列表
+# --install 使用了多个参数用于创建符号链接。
+update-alternatives --install <链接路径> <名称> <命令路径> <优先级别：整数，数字越高，优先级越高>
+update-alternatives --install /usr/bin/python python /usr/bin/python3.7 1
+update-alternatives --install /usr/bin/python python /usr/local/bin/python3.8 2
+# 在替代版本中进行切换
+update-alternatives --config <命令名称>
+update-alternatives --config python
 ```
 
 # MySQL 环境搭建
